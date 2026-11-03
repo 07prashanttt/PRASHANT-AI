@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101522">
+  <title>PRASHANT AI</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #101522;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 18px;
+      background: #171f30;
+      border-bottom: 1px solid #29344a;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      background: #6658e8;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    h2 { margin: 0; font-size: 19px; }
+    header small { color: #aab4c7; }
+    #chat {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .message {
+      max-width: 88%;
+      padding: 13px 15px;
+      border-radius: 15px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .ai {
+      background: #202b40;
+      align-self: flex-start;
+    }
+    .user {
+      background: #6658e8;
+      align-self: flex-end;
+    }
+    .welcome { color: #aab4c7; text-align: center; margin: auto; }
+    .welcome h1 { color: white; }
+    footer {
+      padding: 14px;
+      background: #171f30;
+      border-top: 1px solid #29344a;
+    }
+    .input-area { display: flex; gap: 9px; max-width: 850px; margin: auto; }
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 15px;
+      border: 1px solid #39465e;
+      border-radius: 13px;
+      background: #202b40;
+      color: white;
+      outline: none;
+      font-size: 15px;
+    }
+    button {
+      border: 0;
+      border-radius: 13px;
+      padding: 0 18px;
+      background: #6658e8;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .5; }
+    #status { color: #aab4c7; text-align: center; font-size: 12px; margin-top: 9px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">P</div>
+    <div>
+      <h2>PRASHANT AI</h2>
+      <small>Your personal AI assistant</small>
+    </div>
+  </header>
+
+  <main id="chat">
+    <div class="welcome">
+      <h1>Hello! 👋</h1>
+      <p>I'm PRASHANT AI. Ask me anything.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="input-area">
+      <input id="prompt" placeholder="Message PRASHANT AI..." autocomplete="off">
+      <button id="send">Send</button>
+    </div>
+    <div id="status">Personal AI assistant</div>
+  </footer>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("prompt");
+    const send = document.getElementById("send");
+    const statusText = document.getElementById("status");
+
+    function addMessage(text, type) {
+      const welcome = chat.querySelector(".welcome");
+      if (welcome) welcome.remove();
+
+      const message = document.createElement("div");
+      message.className = "message " + type;
+      message.textContent = text;
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+      return message;
+    }
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text || send.disabled) return;
+
+      addMessage(text, "user");
+      input.value = "";
+      send.disabled = true;
+      statusText.textContent = "Thinking...";
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Request failed");
+
+        addMessage(data.reply || "No reply received.", "ai");
+        statusText.textContent = "Ready";
+      } catch (error) {
+        addMessage("AI connection abhi ready nahi hai. Backend setup agle step mein karenge.", "ai");
+        statusText.textContent = "Connection not ready";
+      } finally {
+        send.disabled = false;
+        input.focus();
+      }
+    }
+
+    send.addEventListener("click", sendMessage);
+    input.addEventListener("keydown", event => {
+      if (event.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>
