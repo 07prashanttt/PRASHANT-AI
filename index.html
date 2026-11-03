@@ -1,174 +1,188 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101522">
-  <title>PRASHANT AI</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: #101522;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    header {
-      padding: 18px;
-      background: #171f30;
-      border-bottom: 1px solid #29344a;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo {
-      background: #6658e8;
-      width: 42px;
-      height: 42px;
-      border-radius: 13px;
-      display: grid;
-      place-items: center;
-      font-weight: bold;
-      font-size: 20px;
-    }
-    h2 { margin: 0; font-size: 19px; }
-    header small { color: #aab4c7; }
-    #chat {
-      flex: 1;
-      padding: 18px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .message {
-      max-width: 88%;
-      padding: 13px 15px;
-      border-radius: 15px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-    .ai {
-      background: #202b40;
-      align-self: flex-start;
-    }
-    .user {
-      background: #6658e8;
-      align-self: flex-end;
-    }
-    .welcome { color: #aab4c7; text-align: center; margin: auto; }
-    .welcome h1 { color: white; }
-    footer {
-      padding: 14px;
-      background: #171f30;
-      border-top: 1px solid #29344a;
-    }
-    .input-area { display: flex; gap: 9px; max-width: 850px; margin: auto; }
-    input {
-      flex: 1;
-      min-width: 0;
-      padding: 15px;
-      border: 1px solid #39465e;
-      border-radius: 13px;
-      background: #202b40;
-      color: white;
-      outline: none;
-      font-size: 15px;
-    }
-    button {
-      border: 0;
-      border-radius: 13px;
-      padding: 0 18px;
-      background: #6658e8;
-      color: white;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:disabled { opacity: .5; }
-    #status { color: #aab4c7; text-align: center; font-size: 12px; margin-top: 9px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101522">
+<title>BAUWA AI</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101522;color:white;font-family:Arial,sans-serif;height:100dvh;display:flex;overflow:hidden}
+.sidebar{width:260px;background:#171f30;padding:16px;display:flex;flex-direction:column;border-right:1px solid #29344a}
+.brand{font-size:23px;font-weight:bold;margin:10px 0 25px}
+.new,.sidebtn{padding:13px;border:1px solid #39465e;background:#202b40;color:white;border-radius:12px;text-align:left;cursor:pointer;margin-bottom:10px}
+.history{overflow:auto;flex:1}
+.history-item{padding:11px;border-radius:9px;cursor:pointer;color:#c7cede;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.history-item:hover,.sidebtn:hover{background:#29364c}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+header{padding:17px 20px;background:#171f30;border-bottom:1px solid #29344a;display:flex;justify-content:space-between;align-items:center}
+header button{background:#29364c;color:white;border:0;padding:10px 13px;border-radius:9px}
+#chat{flex:1;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:15px}
+.welcome{text-align:center;margin:auto;color:#aab4c7}
+.welcome h1{color:white;font-size:30px}
+.message{max-width:85%;padding:13px 16px;border-radius:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{background:#6658e8;align-self:flex-end}
+.ai{background:#202b40;align-self:flex-start}
+footer{padding:15px;background:#171f30;border-top:1px solid #29344a}
+.input-area{max-width:850px;margin:auto;display:flex;gap:9px}
+input{flex:1;min-width:0;padding:15px;border:1px solid #39465e;border-radius:13px;background:#202b40;color:white;font-size:15px}
+button{cursor:pointer}
+#send{background:#6658e8;color:white;border:0;border-radius:12px;padding:0 20px}
+.small{text-align:center;color:#8793aa;font-size:11px;margin-top:10px}
+.panel{display:none;padding:25px;overflow:auto}
+.panel h2{margin-top:0}
+.panel-card{background:#202b40;border:1px solid #39465e;border-radius:14px;padding:18px;margin:12px 0;line-height:1.8}
+#status{color:#aab4c7;text-align:center;font-size:12px;margin-top:8px}
+@media(max-width:650px){
+.sidebar{width:65px;padding:9px}
+.brand{font-size:12px;writing-mode:vertical-rl;margin:10px auto 20px}
+.new{font-size:0;text-align:center;padding:12px 4px}
+.new:after{content:"+";font-size:22px}
+.sidebtn{font-size:0;text-align:center;padding:12px 3px}
+.sidebtn:after{content:"⚙";font-size:18px}
+.history{display:none}
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="logo">P</div>
-    <div>
-      <h2>PRASHANT AI</h2>
-      <small>Your personal AI assistant</small>
-    </div>
-  </header>
 
-  <main id="chat">
-    <div class="welcome">
-      <h1>Hello! 👋</h1>
-      <p>I'm PRASHANT AI. Ask me anything.</p>
-    </div>
-  </main>
+<aside class="sidebar">
+<div class="brand">BAUWA AI</div>
+<button class="new" onclick="newChat()">＋ New Chat</button>
+<div class="history" id="history"></div>
+<button class="sidebtn" onclick="showSettings()">Settings / About Me</button>
+<div class="small">Built by Prashant</div>
+</aside>
 
-  <footer>
-    <div class="input-area">
-      <input id="prompt" placeholder="Message PRASHANT AI..." autocomplete="off">
-      <button id="send">Send</button>
-    </div>
-    <div id="status">Personal AI assistant</div>
-  </footer>
+<main class="main">
+<header>
+<strong>BAUWA AI</strong>
+<button onclick="showChat()">New Chat</button>
+</header>
 
-  <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("prompt");
-    const send = document.getElementById("send");
-    const statusText = document.getElementById("status");
+<section id="chat">
+<div class="welcome">
+<h1>Welcome to BAUWA AI 👋</h1>
+<p>Your personal AI assistant</p>
+<p>Ask anything to get started.</p>
+</div>
+</section>
 
-    function addMessage(text, type) {
-      const welcome = chat.querySelector(".welcome");
-      if (welcome) welcome.remove();
+<section class="panel" id="settings">
+<h2>Settings</h2>
+<div class="panel-card">
+<strong>About BAUWA AI</strong><br>
+Your Personal AI Assistant<br>
+Built by Prashant
+</div>
+<div class="panel-card">
+<strong>About Me</strong><br>
+Creator: Prashant<br>
+Email: 07prashuu@gmail.com<br>
+Contact: Hidden for privacy
+</div>
+<button class="new" onclick="showChat()">← Back to Chat</button>
+</section>
 
-      const message = document.createElement("div");
-      message.className = "message " + type;
-      message.textContent = text;
-      chat.appendChild(message);
-      chat.scrollTop = chat.scrollHeight;
-      return message;
-    }
+<footer id="chatFooter">
+<div class="input-area">
+<input id="prompt" placeholder="Message BAUWA AI..." autocomplete="off">
+<button id="send" onclick="sendMessage()">Send</button>
+</div>
+<div id="status">Ready</div>
+<div class="small">Built by Prashant</div>
+</footer>
+</main>
 
-    async function sendMessage() {
-      const text = input.value.trim();
-      if (!text || send.disabled) return;
+<script>
+const chat=document.getElementById("chat");
+const input=document.getElementById("prompt");
+let conversations=JSON.parse(localStorage.getItem("bauwaChats")||"[]");
+let current=[];
 
-      addMessage(text, "user");
-      input.value = "";
-      send.disabled = true;
-      statusText.textContent = "Thinking...";
-
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: text })
-        });
-
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Request failed");
-
-        addMessage(data.reply || "No reply received.", "ai");
-        statusText.textContent = "Ready";
-      } catch (error) {
-        addMessage("AI connection abhi ready nahi hai. Backend setup agle step mein karenge.", "ai");
-        statusText.textContent = "Connection not ready";
-      } finally {
-        send.disabled = false;
-        input.focus();
-      }
-    }
-
-    send.addEventListener("click", sendMessage);
-    input.addEventListener("keydown", event => {
-      if (event.key === "Enter") sendMessage();
-    });
-  </script>
+function save(){
+localStorage.setItem("bauwaChats",JSON.stringify(conversations));
+renderHistory();
+}
+function renderHistory(){
+const h=document.getElementById("history");
+h.innerHTML="";
+conversations.forEach((c,i)=>{
+const b=document.createElement("div");
+b.className="history-item";
+b.textContent=c.title;
+b.onclick=()=>loadChat(i);
+h.appendChild(b);
+});
+}
+function addMessage(text,type){
+const welcome=chat.querySelector(".welcome");
+if(welcome)welcome.remove();
+const div=document.createElement("div");
+div.className="message "+type;
+div.textContent=text;
+chat.appendChild(div);
+chat.scrollTop=chat.scrollHeight;
+}
+function newChat(){
+current=[];
+chat.innerHTML='<div class="welcome"><h1>Welcome to BAUWA AI 👋</h1><p>Your personal AI assistant</p><p>Ask anything to get started.</p></div>';
+}
+function loadChat(i){
+current=conversations[i].messages;
+chat.innerHTML="";
+current.forEach(m=>addMessage(m.text,m.type));
+}
+function showSettings(){
+chat.style.display="none";
+document.getElementById("chatFooter").style.display="none";
+document.getElementById("settings").style.display="block";
+}
+function showChat(){
+document.getElementById("settings").style.display="none";
+chat.style.display="flex";
+document.getElementById("chatFooter").style.display="block";
+}
+async function sendMessage(){
+const text=input.value.trim();
+if(!text)return;
+input.value="";
+addMessage(text,"user");
+current.push({text,type:"user"});
+document.getElementById("status").textContent="Thinking...";
+const send=document.getElementById("send");
+send.disabled=true;
+try{
+const res=await fetch("/api/chat",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({message:text})
+});
+const data=await res.json();
+if(!res.ok)throw new Error("Backend not ready");
+const reply=data.reply||"No reply received.";
+addMessage(reply,"ai");
+current.push({text:reply,type:"ai"});
+}catch(e){
+const reply="BAUWA AI ka backend abhi setup nahi hua hai. Agle step mein AI connect karenge!";
+addMessage(reply,"ai");
+current.push({text:reply,type:"ai"});
+}
+if(current.length){
+const existing=conversations.findIndex(c=>c.messages===current);
+if(existing===-1){
+conversations.unshift({title:current[0].text.slice(0,35),messages:current});
+}else{
+conversations[existing].messages=current;
+}
+save();
+}
+document.getElementById("status").textContent="Ready";
+send.disabled=false;
+}
+input.addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage()});
+renderHistory();
+</script>
 </body>
 </html>
